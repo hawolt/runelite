@@ -107,6 +107,7 @@ public class ItemChargePluginTest
 
 	private static final String CHECK_BINDING_NECKLACE = "You have 15 charges left before your Binding necklace disintegrates.";
 	private static final String USED_BINDING_NECKLACE = "You bind the temple's power into Mud rune.";
+	private static final String USED_BINDING_NECKLACE_OLD = "You bind the temple's power into lava runes.";
 
 	@Mock
 	@Bind
@@ -581,5 +582,22 @@ public class ItemChargePluginTest
 		ChatMessage chatMessage = new ChatMessage(null, ChatMessageType.GAMEMESSAGE, "", USED_BINDING_NECKLACE, "", 0);
 		itemChargePlugin.onChatMessage(chatMessage);
 		verify(configManager).setRSProfileConfiguration(ItemChargeConfig.GROUP, ItemChargeConfig.KEY_BINDING_NECKLACE, 15);
+	}
+
+	@Test
+	public void testBindingUsedOld()
+	{
+		// checks old chat message for combo runes in case the in-game change is reverted
+		// equip binding necklace
+		ItemContainer equipmentItemContainer = mock(ItemContainer.class);
+		when(client.getItemContainer(InventoryID.WORN))
+			.thenReturn(equipmentItemContainer);
+		when(equipmentItemContainer.contains(ItemID.MAGIC_EMERALD_NECKLACE)).thenReturn(true);
+		when(equipmentItemContainer.getItems()).thenReturn(new Item[0]);
+
+		when(configManager.getRSProfileConfiguration(ItemChargeConfig.GROUP, ItemChargeConfig.KEY_BINDING_NECKLACE, Integer.class)).thenReturn(15);
+		ChatMessage chatMessage = new ChatMessage(null, ChatMessageType.GAMEMESSAGE, "", USED_BINDING_NECKLACE_OLD, "", 0);
+		itemChargePlugin.onChatMessage(chatMessage);
+		verify(configManager).setRSProfileConfiguration(ItemChargeConfig.GROUP, ItemChargeConfig.KEY_BINDING_NECKLACE, 14);
 	}
 }
