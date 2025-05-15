@@ -52,6 +52,7 @@ import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.Notifier;
@@ -524,6 +525,10 @@ public class ItemChargePlugin extends Plugin
 		if (event.getVarbitId() == VarbitID.LUMBRIDGE_FREE_ALCHS)
 		{
 			updateExplorerRingCharges(event.getValue());
+		}
+		else if (event.getVarpId() == VarPlayerID.NECKLACE_OF_BINDING)
+		{
+			updateBindingNecklaceCharges(event.getValue());
 		}
 	}
 
